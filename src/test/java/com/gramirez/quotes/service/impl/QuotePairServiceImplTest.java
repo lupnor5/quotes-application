@@ -104,7 +104,7 @@ class QuotePairServiceImplTest {
         // - 20 with 40: 3*2 = 6
         // - 20 with 60: not valid (20+60 > 70), so not counted
         // - 40 with 60: not valid (40+60 > 70), so not counted
-        // Total: 3 + 6 = 10
+        // Total: 3 + 6 = 9
         assertEquals(9L, result);
     }
 

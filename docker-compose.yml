@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: springboot-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/quotesdb
+      - SPRING_DATASOURCE_USERNAME=quotesuser
+      - SPRING_DATASOURCE_PASSWORD=postgres123
+      # Agregar configuración explícita para el driver
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
+      # Configurar timeout más largo para la conexión inicial
+      - SPRING_DATASOURCE_HIKARI_INITIALIZATION_FAIL_TIMEOUT=60000
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_PROFILES_ACTIVE=import
+      - SPRINGDOC_API_DOCS_PATH=/v3/api-docs
+      - SPRINGDOC_SWAGGER_UI_PATH=/swagger-ui.html
+      - SPRINGDOC_SWAGGER_UI_OPERATIONSSORTER=method
+      - SPRINGDOC_SWAGGER_UI_TAGSSORTER=alpha
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./src/main/resources:/app/src/main/resources
+    networks:
+      - spring-postgres-network
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:14
+    container_name: postgres-db
+    environment:
+      - POSTGRES_PASSWORD=postgres123
+      - POSTGRES_USER=quotesuser
+      - POSTGRES_DB=quotesdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - spring-postgres-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U quotesuser"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+networks:
+  spring-postgres-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
