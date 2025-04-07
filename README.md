@@ -78,7 +78,7 @@ This application provides a RESTful API for managing a collection of quotes and 
 
 5. Access the Swagger documentation at:
    ```
-   http://localhost:8080/swagger-ui.html
+   http://localhost:8080/swagger-ui/index.html
    ```
 
 ## Configuration
@@ -88,8 +88,8 @@ The application can be configured through the `application.properties` or `appli
 ```yaml
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/quotes_db
-    username: root
+    url: jdbc:mysql://localhost:3306/quotesdb
+    username: username
     password: password
   jpa:
     hibernate:
