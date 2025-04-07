@@ -20,7 +20,7 @@ This application provides a RESTful API for managing a collection of quotes and 
 - Spring Data JPA
 - Spring Web
 - Swagger/OpenAPI for documentation
-- Maven/Gradle for dependency management
+- Gradle for dependency management
 
 ## API Endpoints
 
