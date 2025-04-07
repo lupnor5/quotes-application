@@ -13,9 +13,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/quotesdb
       - SPRING_DATASOURCE_USERNAME=quotesuser
       - SPRING_DATASOURCE_PASSWORD=postgres123
-      # Agregar configuración explícita para el driver
       - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
-      # Configurar timeout más largo para la conexión inicial
       - SPRING_DATASOURCE_HIKARI_INITIALIZATION_FAIL_TIMEOUT=60000
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - SPRING_PROFILES_ACTIVE=import
@@ -46,7 +44,7 @@ services:
       - spring-postgres-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U quotesuser"]
+      test: ["CMD-SHELL", "pg_isready -U quotesuser -d quotesdb"]
       interval: 5s
       timeout: 5s
       retries: 5
