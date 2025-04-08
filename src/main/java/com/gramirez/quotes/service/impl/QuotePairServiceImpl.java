@@ -17,7 +17,7 @@ public class QuotePairServiceImpl implements QuotePairService {
 
     @Override
     public Long countPairsWithMaxLength(int maxLength) {
-        return  quoteRepository.getLengthFrequencies(maxLength);
+        return quoteRepository.countPossiblePairs(maxLength);
     }
 
 }
