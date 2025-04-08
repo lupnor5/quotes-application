@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 //TODO - Add integration tests for it
 @Repository
 public interface QuoteRepository extends JpaRepository<Quote, Long> {
@@ -34,7 +36,7 @@ public interface QuoteRepository extends JpaRepository<Quote, Long> {
            FROM pairs
 
            """, nativeQuery = true)
-    long countPossiblePairs(@Param("maxLength") int maxLength);
+    Optional<Long> countPossiblePairs(@Param("maxLength") int maxLength);
 
 
 }

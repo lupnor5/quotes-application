@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -26,8 +28,8 @@ public class QuotePairServiceImplTest {
     @Test
     public void testCountPairsWithMaxLength_ReturnsCorrectCount() {
         int maxLength = 10;
-        Long expectedCount = 5L;
-        when(quoteRepository.countPossiblePairs(maxLength)).thenReturn(expectedCount);
+        Long expectedCount =5L;
+        when(quoteRepository.countPossiblePairs(maxLength)).thenReturn(Optional.of(expectedCount));
 
         Long actualCount = quotePairService.countPairsWithMaxLength(maxLength);
 
@@ -39,7 +41,7 @@ public class QuotePairServiceImplTest {
     public void testCountPairsWithMaxLength_WithZeroLength() {
         int maxLength = 0;
         Long expectedCount = 0L;
-        when(quoteRepository.countPossiblePairs(maxLength)).thenReturn(expectedCount);
+        when(quoteRepository.countPossiblePairs(maxLength)).thenReturn(Optional.of(expectedCount));
 
         Long actualCount = quotePairService.countPairsWithMaxLength(maxLength);
 
@@ -51,7 +53,7 @@ public class QuotePairServiceImplTest {
     public void testCountPairsWithMaxLength_WithNegativeLength() {
         int maxLength = -5;
         Long expectedCount = 0L;
-        when(quoteRepository.countPossiblePairs(maxLength)).thenReturn(expectedCount);
+        when(quoteRepository.countPossiblePairs(maxLength)).thenReturn(Optional.of(expectedCount));
 
         Long actualCount = quotePairService.countPairsWithMaxLength(maxLength);
 
