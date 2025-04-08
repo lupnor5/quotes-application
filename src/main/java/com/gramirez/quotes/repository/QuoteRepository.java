@@ -6,26 +6,30 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 @Repository
 public interface QuoteRepository extends JpaRepository<Quote, Long> {
 
-    @Query(value = "select length(text) as lengthText, count(*) as count from quotes where length(text) <= :maxLength group by length(text)", nativeQuery = true)
-    List<LengthCountProjection> getLengthFrequencies(@Param("maxLength") int maxLength);
+    @Query(value = """
+            WITH frequency_map AS (
+                   SELECT length(text) AS leng_text, count(*) AS frequency
+                   FROM quotes
+                   WHERE length(text) <= :maxLength
+                   GROUP BY length(text)
+            ),
+            pairs AS (
+                   SELECT a.leng_text AS len_a, b.leng_text AS len_b,
+                          a.frequency AS freq_a, b.frequency AS freq_b,
+                          a.frequency * CASE
+                                          WHEN a.leng_text = b.leng_text THEN b.frequency - 1
+                                          ELSE b.frequency
+                                        END AS pair_count
+                   FROM frequency_map a
+                   JOIN frequency_map b
+                   ON a.leng_text + b.leng_text <= :maxLength
+                   AND a.leng_text <= b.leng_text
+            )
+            SELECT SUM(pair_count) AS total_possible_pairs
+            FROM pairs""", nativeQuery = true)
+    long  getLengthFrequencies(@Param("maxLength") int maxLength);
 
-    interface LengthCountProjection {
-        Integer getLengthText();
-        Long getCount();
-    }
-
-    default Map<Integer, Long> getLengthFrequencyMap(int maxLength) {
-        return getLengthFrequencies(maxLength).stream()
-                .collect(Collectors.toMap(
-                        LengthCountProjection::getLengthText,
-                        LengthCountProjection::getCount
-                ));
-    }
 }
